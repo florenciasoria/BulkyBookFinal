@@ -22,7 +22,7 @@ namespace BulkyBookFinal.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult Upsert(int ? id)
+        public IActionResult Upsert(int? id)
         {
             Category category = new Category();
             if(id == null)
@@ -69,6 +69,20 @@ namespace BulkyBookFinal.Areas.Admin.Controllers
             var allObj =_unitOfWork.Category.GetAll();
             return Json(new { data = allObj });
         }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var objFromDb = _unitOfWork.Category.Get(id);
+            if(objFromDb == null)
+            {
+                return Json(new { success = false, message = "Error durante la eliminacion" });
+            }
+            _unitOfWork.Category.Remove(objFromDb);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Eliminacion exitosa" });
+        }
+
         #endregion
     }
 }
